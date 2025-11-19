@@ -13,7 +13,7 @@ public class UsuarioController {
 
     private final UsuarioRepository usuarioRepository;
 
-    public ProductoController(UsuarioRepository usuarioRepository) {
+    public UsuarioController(UsuarioRepository usuarioRepository) {
         this.usuarioRepository = usuarioRepository;
     }
 
@@ -25,7 +25,7 @@ public class UsuarioController {
 
     // Obtener usuario por ID
     @GetMapping("/{id}")
-    public Usuario getUserById(@PathVariable Long id) {
+    public Usuario getUserById(@PathVariable String id) {
         return usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
@@ -66,7 +66,7 @@ public class UsuarioController {
 
     // Eliminar usuario
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Long id) {
+    public void deleteUser(@PathVariable String id) {
         usuarioRepository.deleteById(id);
     }
 }

@@ -1,18 +1,17 @@
 package com.example.miapp.model;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import jakarta.persistence.*;
 import lombok.*;
 
-@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Document(collection = "productos")
 public class Producto {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     private String nombre;
     private Double precio;

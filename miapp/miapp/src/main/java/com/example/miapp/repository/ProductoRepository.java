@@ -1,7 +1,8 @@
 package com.example.miapp.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
+
 import com.example.miapp.model.Producto;
 
-public interface ProductoRepository extends JpaRepository<Producto, Long> {
+public interface ProductoRepository extends MongoRepository<Producto, String> {
 }

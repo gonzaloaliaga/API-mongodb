@@ -25,7 +25,7 @@ public class ProductoController {
 
     // Obtener producto por ID
     @GetMapping("/{id}")
-    public Producto getProductById(@PathVariable Long id) {
+    public Producto getProductById(@PathVariable String id) {
         return productoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
     }
@@ -38,7 +38,7 @@ public class ProductoController {
 
     // Actualizar producto existente
     @PutMapping("/{id}")
-    public Producto updateProduct(@PathVariable Long id, @RequestBody Producto productDetails) {
+    public Producto updateProduct(@PathVariable String id, @RequestBody Producto productDetails) {
         Producto product = productoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
@@ -52,7 +52,7 @@ public class ProductoController {
 
     // Eliminar producto
     @DeleteMapping("/{id}")
-    public void deleteProduct(@PathVariable Long id) {
+    public void deleteProduct(@PathVariable String id) {
         productoRepository.deleteById(id);
     }
 }
