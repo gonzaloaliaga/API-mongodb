@@ -1,4 +1,4 @@
-package com.example.miapp.model;
+package com.comicommerce.ComiCommerce.model;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 import jakarta.persistence.*;
@@ -8,16 +8,17 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Producto {
-
+public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     private String nombre;
-    private Double precio;
-    private String descripcion;
-    private String categoria;
+    private String correo;
+    private String pass;
+    private String telefono;
+    private String region;
+    private String comuna;
 
 }
 
