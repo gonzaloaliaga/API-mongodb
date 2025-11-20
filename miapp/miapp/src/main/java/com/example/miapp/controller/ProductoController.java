@@ -46,6 +46,7 @@ public class ProductoController {
         product.setPrecio(productDetails.getPrecio());
         product.setDescripcion(productDetails.getDescripcion());
         product.setCategoria(productDetails.getCategoria());
+        product.setImg(productDetails.getImg());
         
         return productoRepository.save(product);
     }
