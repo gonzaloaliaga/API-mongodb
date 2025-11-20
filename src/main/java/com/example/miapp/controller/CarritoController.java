@@ -12,6 +12,11 @@ import com.example.miapp.repository.CarritoRepository;
 
 @RestController
 @RequestMapping("/api/carrito")
+@CrossOrigin(
+    origins = {
+        "https://comicommerce.vercel.app"
+    }
+)
 public class CarritoController {
 
     private final CarritoRepository carritoRepository;
