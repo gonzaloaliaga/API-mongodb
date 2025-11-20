@@ -8,7 +8,6 @@ import com.example.miapp.repository.ProductoRepository;
 
 @RestController
 @RequestMapping("/api/products")
-@CrossOrigin(origins = "*") // Permite peticiones desde frontend
 public class ProductoController {
 
     private final ProductoRepository productoRepository;

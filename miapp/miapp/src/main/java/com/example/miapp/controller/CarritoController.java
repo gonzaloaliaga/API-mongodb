@@ -12,7 +12,6 @@ import com.example.miapp.repository.CarritoRepository;
 
 @RestController
 @RequestMapping("/api/carrito")
-@CrossOrigin(origins = "*")
 public class CarritoController {
 
     private final CarritoRepository carritoRepository;
