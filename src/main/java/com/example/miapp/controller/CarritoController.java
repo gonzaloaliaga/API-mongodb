@@ -14,7 +14,8 @@ import com.example.miapp.repository.CarritoRepository;
 @RequestMapping("/api/carrito")
 @CrossOrigin(
     origins = {
-        "https://comicommerce.vercel.app"
+        "https://comicommerce.vercel.app",
+        "https://mondongonzalo.up.railway.app"
     }
 )
 public class CarritoController {

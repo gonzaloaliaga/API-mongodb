@@ -10,7 +10,8 @@ import com.example.miapp.repository.UsuarioRepository;
 @RequestMapping("/api/users")
 @CrossOrigin(
     origins = {
-        "https://comicommerce.vercel.app"
+        "https://comicommerce.vercel.app",
+        "https://mondongonzalo.up.railway.app"
     }
 )
 public class UsuarioController {

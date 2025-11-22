@@ -10,7 +10,8 @@ import com.example.miapp.repository.ProductoRepository;
 @RequestMapping("/api/products")
 @CrossOrigin(
     origins = {
-        "https://comicommerce.vercel.app"
+        "https://comicommerce.vercel.app",
+        "https://mondongonzalo.up.railway.app"
     }
 )
 public class ProductoController {
