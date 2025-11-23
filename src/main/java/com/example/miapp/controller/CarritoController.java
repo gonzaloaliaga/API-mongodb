@@ -59,6 +59,9 @@ public class CarritoController {
         if (encontrado.isPresent()) {
             encontrado.get().setCantidad(encontrado.get().getCantidad() + itemRequest.getCantidad());
         } else {
+            CarritoItem item = new CarritoItem();
+            item.setProductoId(itemRequest.getProductoId());
+            item.setCantidad(itemRequest.getCantidad());
             items.add(itemRequest);
         }
 
