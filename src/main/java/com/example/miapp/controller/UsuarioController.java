@@ -35,6 +35,17 @@ public class UsuarioController {
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
+    // Login con correo y contraseña
+    @GetMapping("/login")
+    public Usuario loginUser(
+            @RequestParam String correo,
+            @RequestParam String password) {
+
+        return usuarioRepository.findByCorreo(correo)
+                .filter(u -> u.getPassword().equals(password))
+                .orElseThrow(() -> new RuntimeException("Credenciales inválidas"));
+    }
+
     // Crear un nuevo usuario
     @PostMapping
     public Usuario createUser(@RequestBody Usuario usuario) {
