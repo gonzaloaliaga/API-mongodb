@@ -44,8 +44,12 @@ public class CarritoController {
     public Carrito addItem(
             @PathVariable String usuarioId,
             @RequestBody CarritoItem itemRequest) {
-
+                
         Carrito carrito = getCarrito(usuarioId);
+        if (carrito.getItems() == null) {
+            carrito.setItems(new ArrayList<>());
+        }
+
         List<CarritoItem> items = carrito.getItems();
 
         Optional<CarritoItem> encontrado = items.stream()
@@ -58,7 +62,7 @@ public class CarritoController {
             items.add(itemRequest);
         }
 
-        carrito.setItems(items);
+        // No hace falta volver a setItems si usas la misma referencia
         return carritoRepository.save(carrito);
     }
 
