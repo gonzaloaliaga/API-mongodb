@@ -42,7 +42,7 @@ public class UsuarioController {
             @RequestParam String password) {
 
         return usuarioRepository.findByCorreo(correo)
-                .filter(u -> u.getPassword().equals(password))
+                .filter(u -> u.getPass().equals(password))
                 .orElseThrow(() -> new RuntimeException("Credenciales inválidas"));
     }
 
