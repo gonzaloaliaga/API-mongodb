@@ -2,7 +2,12 @@ package com.example.miapp.controller;
 
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-
+import java.util.Optional;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import com.example.miapp.model.Usuario;
 import com.example.miapp.repository.UsuarioRepository;
 
@@ -14,6 +19,7 @@ import com.example.miapp.repository.UsuarioRepository;
         "https://mondongonzalo.up.railway.app"
     }
 )
+@Tag(name = "Usuarios", description = "Operaciones de gestion, registro e inicio de sesion de usuarios.")
 public class UsuarioController {
 
     private final UsuarioRepository usuarioRepository;
@@ -22,39 +28,65 @@ public class UsuarioController {
         this.usuarioRepository = usuarioRepository;
     }
 
-    // Obtener todos los usuarios
+    // OBTENER TODOS LOS USUARIOS
+    @Operation(summary = "Obtener todos los usuarios", description = "Devuelve la lista completa de todos los usuarios registrados en el sistema.")
     @GetMapping
     public List<Usuario> getAllUsers() {
         return usuarioRepository.findAll();
     }
 
-    // Obtener usuario por ID
+    // OBTENER USUARIO POR ID
+    @Operation(summary = "Obtener usuario por ID", description = "Busca un usuario específico usando su ID.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Usuario encontrado exitosamente"),
+        @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
+    })
     @GetMapping("/{id}")
-    public Usuario getUserById(@PathVariable String id) {
+    public Usuario getUserById(
+        @Parameter(description = "ID del usuario a buscar")
+        @PathVariable String id) {
         return usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    // Login con correo y contraseña
-    @GetMapping("/login")
+    // INICIO DE SESIÓN
+    @Operation(summary = "Iniciar Sesión", description = "Verifica credenciales de correo y contraseña. Retorna el objeto Usuario si son correctas.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Inicio de sesion exitoso"),
+        @ApiResponse(responseCode = "401", description = "Credenciales invalidas")
+    })
+    @PostMapping("/login")
     public Usuario loginUser(
-            @RequestParam String correo,
-            @RequestParam String password) {
-
-        return usuarioRepository.findByCorreo(correo)
-                .filter(u -> u.getPass().equals(password))
-                .orElseThrow(() -> new RuntimeException("Credenciales inválidas"));
+            @RequestBody Usuario loginRequest) {
+        
+        return usuarioRepository.findByCorreo(loginRequest.getCorreo())
+                .filter(u -> u.getPass().equals(loginRequest.getPass()))
+                .orElseThrow(() -> new RuntimeException("Credenciales invalidas"));
     }
 
-    // Crear un nuevo usuario
+
+    // REGISTRAR NUEVO USUARIO
+    @Operation(summary = "Registrar nuevo usuario", description = "Crea una nueva cuenta de usuario en la base de datos.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Usuario registrado y devuelto"),
+        @ApiResponse(responseCode = "400", description = "Datos de entrada invalidos")
+    })
     @PostMapping
     public Usuario createUser(@RequestBody Usuario usuario) {
         return usuarioRepository.save(usuario);
     }
 
-    // Actualizar usuario existente
+    // ACTUALIZAR USUARIO EXISTENTE
+    @Operation(summary = "Actualizar usuario", description = "Modifica los datos de un usuario existente.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Usuario actualizado"),
+        @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
+    })
     @PutMapping("/{id}")
-    public Usuario updateUser(@PathVariable String id, @RequestBody Usuario userDetails) {
+    public Usuario updateUser(
+        @Parameter(description = "ID del usuario a actualizar")
+        @PathVariable String id, 
+        @RequestBody Usuario userDetails) {
 
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -80,7 +112,12 @@ public class UsuarioController {
         return usuarioRepository.save(usuario);
     }
 
-    // Eliminar usuario
+    // ELIMINAR USUARIO
+    @Operation(summary = "Eliminar usuario", description = "Elimina permanentemente un usuario de la base de datos.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Usuario eliminado"),
+        @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
+    })
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable String id) {
         usuarioRepository.deleteById(id);
