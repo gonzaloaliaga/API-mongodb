@@ -6,6 +6,10 @@ import java.util.List;
 import com.example.miapp.model.Producto;
 import com.example.miapp.repository.ProductoRepository;
 
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.CollectionModel;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
 @RestController
 @RequestMapping("/api/products")
 @CrossOrigin(

@@ -6,6 +6,10 @@ import java.util.List;
 import com.example.miapp.model.Usuario;
 import com.example.miapp.repository.UsuarioRepository;
 
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.CollectionModel;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
 @RestController
 @RequestMapping("/api/users")
 @CrossOrigin(
