@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.info.Info;
     version = "1.0",
     description = "API RESTful para la gestión de productos, usuarios y carrito de ComiCommerce"
 ))
+
 public class MiappApplication {
 
 	public static void main(String[] args) {

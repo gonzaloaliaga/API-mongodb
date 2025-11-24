@@ -13,6 +13,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import com.example.miapp.model.Carrito;
 import com.example.miapp.model.CarritoItem;
 import com.example.miapp.repository.CarritoRepository;
+import org.springframework.hateoas.EntityModel;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @RestController
 @RequestMapping("/api/carrito")
@@ -31,21 +33,26 @@ public class CarritoController {
         this.carritoRepository = carritoRepository;
     }
 
+    // HATEOAS
+    private EntityModel<Carrito> toModel(Carrito carrito) {
+        return EntityModel.of(carrito,
+            linkTo(methodOn(CarritoController.class).getCarrito(carrito.getUsuarioId())).withSelfRel(),
+            linkTo(methodOn(UsuarioController.class).getUserById(carrito.getUsuarioId()))
+                .withRel("usuario")
+        );
+    }
+
     // Obtener carrito del usuario
     @Operation(summary = "Obtener Carrito", description = "Devuelve el carrito de compras actual de un usuario. Si no existe, crea uno vacio.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Carrito encontrado/Creado exitosamente.")
     })
     @GetMapping("/{usuarioId}")
-    public Carrito getCarrito(@PathVariable String usuarioId) {
-        Carrito carrito = carritoRepository.findByUsuarioId(usuarioId).orElse(null);
-        if (carrito == null) {
-            carrito = new Carrito();
-            carrito.setUsuarioId(usuarioId);
-            carrito.setItems(new ArrayList<>());
-            carrito = carritoRepository.save(carrito);
-        }
-        return carrito;
+    public EntityModel<Carrito> getCarrito(@PathVariable String usuarioId) {
+        Carrito carrito = carritoRepository.findByUsuarioId(usuarioId)
+                .orElseGet(() -> carritoRepository.save(new Carrito(null, usuarioId, new ArrayList<>())));
+        
+        return toModel(carrito);
     }
 
     // Agregar producto o aumentar cantidad
@@ -54,17 +61,14 @@ public class CarritoController {
         @ApiResponse(responseCode = "200", description = "Producto agregado/Cantidad actualizada.")
     })
     @PostMapping("/{usuarioId}/add")
-    public Carrito addItem(
+    public EntityModel<Carrito> addItem(
             @PathVariable String usuarioId,
             @RequestBody CarritoItem itemRequest) {
-                
-        Carrito carrito = getCarrito(usuarioId);
-        if (carrito.getItems() == null) {
-            carrito.setItems(new ArrayList<>());
-        }
+
+        Carrito carrito = carritoRepository.findByUsuarioId(usuarioId)
+                .orElseGet(() -> carritoRepository.save(new Carrito(null, usuarioId, new ArrayList<>())));
 
         List<CarritoItem> items = carrito.getItems();
-
         Optional<CarritoItem> encontrado = items.stream()
                 .filter(i -> i.getProductoId().equals(itemRequest.getProductoId()))
                 .findFirst();
@@ -72,12 +76,11 @@ public class CarritoController {
         if (encontrado.isPresent()) {
             encontrado.get().setCantidad(encontrado.get().getCantidad() + itemRequest.getCantidad());
         } else {
-            CarritoItem item = new CarritoItem();
-            item.setProductoId(itemRequest.getProductoId());
-            item.setCantidad(itemRequest.getCantidad());
             items.add(itemRequest);
         }
-        return carritoRepository.save(carrito);
+
+        carritoRepository.save(carrito);
+        return toModel(carrito);
     }
 
     // Disminuir cantidad o eliminar producto si llega a 0
@@ -86,28 +89,33 @@ public class CarritoController {
         @ApiResponse(responseCode = "200", description = "Cantidad actualizada/Producto eliminado.")
     })
     @PutMapping("/{usuarioId}/remove/{productoId}")
-    public Carrito removeItem(
+    public EntityModel<Carrito> removeItem(
             @PathVariable String usuarioId,
             @PathVariable String productoId) {
 
-        Carrito carrito = getCarrito(usuarioId);
+        Carrito carrito = carritoRepository.findByUsuarioId(usuarioId)
+                .orElseGet(() -> carritoRepository.save(new Carrito(null, usuarioId, new ArrayList<>())));
+
         List<CarritoItem> items = carrito.getItems();
 
         items.removeIf(i -> {
             if (i.getProductoId().equals(productoId)) {
                 int nuevaCantidad = i.getCantidad() - 1;
+
                 if (nuevaCantidad > 0) {
                     i.setCantidad(nuevaCantidad);
-                    return false;
-                } else {
-                    return true;
+                    return false; // mantener item
                 }
+
+                return true; // eliminar item porque llega a 0
             }
             return false;
         });
 
         carrito.setItems(items);
-        return carritoRepository.save(carrito);
+        carritoRepository.save(carrito);
+
+        return toModel(carrito);
     }
 
     // Vaciar carrito

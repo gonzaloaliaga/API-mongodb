@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,19 +19,19 @@ public class Usuario {
 
     @Schema(description = "Nombre completo del usuario.", example = "Clark Kent")
     private String nombre;
-    
+
     @Schema(description = "Correo electrónico del usuario.", example = "clark.kent@duoc.cl")
     private String correo;
-    
+
     @Schema(description = "Contraseña de la cuenta.", example = "ClaveSegura123")
     private String pass;
-    
+
     @Schema(description = "Número de teléfono.", example = "987654321")
     private String telefono;
-    
+
     @Schema(description = "Región de residencia del usuario.", example = "Metropolitana de Santiago")
     private String region;
-    
+
     @Schema(description = "Comuna de residencia del usuario.", example = "Providencia")
     private String comuna;
 

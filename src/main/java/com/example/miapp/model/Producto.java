@@ -22,7 +22,7 @@ public class Producto {
     @Schema(description = "Precio unitario del producto.", example = "54930.00")
     private Double precio;
 
-    @Schema(description = "Descripción detallada del cómic/manga.", example = "El peor enemigo de Batman, el Joker, se ha escapado de la prisión de Arkham...")
+@Schema(description = "Descripción detallada del cómic/manga.", example = "El peor enemigo de Batman, el Joker, se ha escapado de la prisión de Arkham...")
     private String descripcion;
 
     @Schema(description = "Categoría del producto.", example = "DC")
