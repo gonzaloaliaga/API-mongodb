@@ -26,32 +26,34 @@ public class CarritoController {
         this.carritoRepository = carritoRepository;
     }
 
+    // HATEOAS
+    private EntityModel<Carrito> toModel(Carrito carrito) {
+        return EntityModel.of(carrito,
+            linkTo(methodOn(CarritoController.class).getCarrito(carrito.getUsuarioId())).withSelfRel(),
+            linkTo(methodOn(UsuarioController.class).getUserById(carrito.getUsuarioId()))
+                .withRel("usuario")
+        );
+    }
+
     // Obtener carrito del usuario
     @GetMapping("/{usuarioId}")
-    public Carrito getCarrito(@PathVariable String usuarioId) {
-        Carrito carrito = carritoRepository.findByUsuarioId(usuarioId).orElse(null);
-        if (carrito == null) {
-            carrito = new Carrito();
-            carrito.setUsuarioId(usuarioId);
-            carrito.setItems(new ArrayList<>());
-            carrito = carritoRepository.save(carrito);
-        }
-        return carrito;
+    public EntityModel<Carrito> getCarritoHateoas(@PathVariable String usuarioId) {
+        Carrito carrito = carritoRepository.findByUsuarioId(usuarioId)
+                .orElseGet(() -> carritoRepository.save(new Carrito(null, usuarioId, new ArrayList<>())));
+        
+        return toModel(carrito);
     }
 
     // Agregar producto o aumentar cantidad
     @PostMapping("/{usuarioId}/add")
-    public Carrito addItem(
+    public EntityModel<Carrito> addItem(
             @PathVariable String usuarioId,
             @RequestBody CarritoItem itemRequest) {
-                
-        Carrito carrito = getCarrito(usuarioId);
-        if (carrito.getItems() == null) {
-            carrito.setItems(new ArrayList<>());
-        }
+
+        Carrito carrito = carritoRepository.findByUsuarioId(usuarioId)
+                .orElseGet(() -> carritoRepository.save(new Carrito(null, usuarioId, new ArrayList<>())));
 
         List<CarritoItem> items = carrito.getItems();
-
         Optional<CarritoItem> encontrado = items.stream()
                 .filter(i -> i.getProductoId().equals(itemRequest.getProductoId()))
                 .findFirst();
@@ -59,19 +61,16 @@ public class CarritoController {
         if (encontrado.isPresent()) {
             encontrado.get().setCantidad(encontrado.get().getCantidad() + itemRequest.getCantidad());
         } else {
-            CarritoItem item = new CarritoItem();
-            item.setProductoId(itemRequest.getProductoId());
-            item.setCantidad(itemRequest.getCantidad());
             items.add(itemRequest);
         }
 
-        // No hace falta volver a setItems si usas la misma referencia
-        return carritoRepository.save(carrito);
+        carritoRepository.save(carrito);
+        return toModel(carrito);
     }
 
     // Disminuir cantidad o eliminar producto si llega a 0
     @PutMapping("/{usuarioId}/remove/{productoId}")
-    public Carrito removeItem(
+    public EntityModel<Carrito> removeItem(
             @PathVariable String usuarioId,
             @PathVariable String productoId) {
 
@@ -85,14 +84,16 @@ public class CarritoController {
                     i.setCantidad(nuevaCantidad);
                     return false;
                 } else {
-                    return true; // se elimina si queda en 0
+                    return true;
                 }
             }
             return false;
         });
 
         carrito.setItems(items);
-        return carritoRepository.save(carrito);
+        carritoRepository.save(carrito);
+
+        return toModel(carrito);
     }
 
     // Vaciar carrito

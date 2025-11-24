@@ -22,17 +22,33 @@ public class UsuarioController {
         this.usuarioRepository = usuarioRepository;
     }
 
+    // HATEOAS
+    private EntityModel<Usuario> toModel(Usuario usuario) {
+        return EntityModel.of(usuario,
+            linkTo(methodOn(UsuarioController.class).getUserById(usuario.getId())).withSelfRel(),
+            linkTo(methodOn(UsuarioController.class).getAllUsers()).withRel("usuarios"),
+            linkTo(methodOn(CarritoController.class).getCarrito(usuario.getId())).withRel("carrito")
+        );
+    }
+
     // Obtener todos los usuarios
-    @GetMapping
-    public List<Usuario> getAllUsers() {
-        return usuarioRepository.findAll();
+   @GetMapping
+    public CollectionModel<EntityModel<Usuario>> getAllUsers() {
+        List<EntityModel<Usuario>> usuarios = usuarioRepository.findAll().stream()
+                .map(this::toModel)
+                .toList();
+
+        return CollectionModel.of(usuarios,
+                linkTo(methodOn(UsuarioController.class).getAllUsers()).withSelfRel());
     }
 
     // Obtener usuario por ID
     @GetMapping("/{id}")
-    public Usuario getUserById(@PathVariable String id) {
-        return usuarioRepository.findById(id)
+    public EntityModel<Usuario> getUserById(@PathVariable String id) {
+        Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+        
+        return toModel(usuario);
     }
 
     // Login con correo y contraseña
@@ -48,36 +64,27 @@ public class UsuarioController {
 
     // Crear un nuevo usuario
     @PostMapping
-    public Usuario createUser(@RequestBody Usuario usuario) {
-        return usuarioRepository.save(usuario);
+    public EntityModel<Usuario> createUser(@RequestBody Usuario usuario) {
+        Usuario saved = usuarioRepository.save(usuario);
+        return toModel(saved);
     }
 
     // Actualizar usuario existente
     @PutMapping("/{id}")
-    public Usuario updateUser(@PathVariable String id, @RequestBody Usuario userDetails) {
-
+    public EntityModel<Usuario> updateUser(@PathVariable String id, @RequestBody Usuario userDetails) {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if (userDetails.getNombre() != null)
-            usuario.setNombre(userDetails.getNombre());
+        if (userDetails.getNombre() != null) usuario.setNombre(userDetails.getNombre());
+        if (userDetails.getCorreo() != null) usuario.setCorreo(userDetails.getCorreo());
+        if (userDetails.getPass() != null) usuario.setPass(userDetails.getPass());
+        if (userDetails.getTelefono() != null) usuario.setTelefono(userDetails.getTelefono());
+        if (userDetails.getRegion() != null) usuario.setRegion(userDetails.getRegion());
+        if (userDetails.getComuna() != null) usuario.setComuna(userDetails.getComuna());
 
-        if (userDetails.getCorreo() != null)
-            usuario.setCorreo(userDetails.getCorreo());
+        usuarioRepository.save(usuario);
 
-        if (userDetails.getPass() != null)
-            usuario.setPass(userDetails.getPass());
-
-        if (userDetails.getTelefono() != null)
-            usuario.setTelefono(userDetails.getTelefono());
-
-        if (userDetails.getRegion() != null)
-            usuario.setRegion(userDetails.getRegion());
-
-        if (userDetails.getComuna() != null)
-            usuario.setComuna(userDetails.getComuna());
-
-        return usuarioRepository.save(usuario);
+        return toModel(usuario);
     }
 
     // Eliminar usuario

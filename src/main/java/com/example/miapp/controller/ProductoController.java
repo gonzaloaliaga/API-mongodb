@@ -21,29 +21,44 @@ public class ProductoController {
     public ProductoController(ProductoRepository productoRepository) {
         this.productoRepository = productoRepository;
     }
+    
+    // HATEOAS
+    private EntityModel<Producto> toModel(Producto product) {
+        return EntityModel.of(product,
+            linkTo(methodOn(ProductoController.class).getProductById(product.getId())).withSelfRel(),
+            linkTo(methodOn(ProductoController.class).getAllProducts()).withRel("productos")
+        );
+    }
 
     // Obtener todos los productos
     @GetMapping
-    public List<Producto> getAllProducts() {
-        return productoRepository.findAll();
+    public CollectionModel<EntityModel<Producto>> getAllProducts() {
+        List<EntityModel<Producto>> products = productoRepository.findAll()
+                .stream().map(this::toModel).toList();
+
+        return CollectionModel.of(products,
+                linkTo(methodOn(ProductoController.class).getAllProducts()).withSelfRel());
     }
 
     // Obtener producto por ID
     @GetMapping("/{id}")
-    public Producto getProductById(@PathVariable String id) {
-        return productoRepository.findById(id)
+    public EntityModel<Producto> getProductById(@PathVariable String id) {
+        Producto product = productoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        return toModel(product);
     }
 
     // Crear un nuevo producto
     @PostMapping
-    public Producto createProduct(@RequestBody Producto product) {
-        return productoRepository.save(product);
+    public EntityModel<Producto> createProduct(@RequestBody Producto product) {
+        Producto saved = productoRepository.save(product);
+        return toModel(saved);  // usando tu helper toModel()
     }
 
     // Actualizar producto existente
     @PutMapping("/{id}")
-    public Producto updateProduct(@PathVariable String id, @RequestBody Producto productDetails) {
+    public EntityModel<Producto> updateProduct(@PathVariable String id, @RequestBody Producto productDetails) {
         Producto product = productoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
@@ -52,8 +67,10 @@ public class ProductoController {
         product.setDescripcion(productDetails.getDescripcion());
         product.setCategoria(productDetails.getCategoria());
         product.setImg(productDetails.getImg());
-        
-        return productoRepository.save(product);
+
+        productoRepository.save(product);
+
+        return toModel(product);
     }
 
     // Eliminar producto
