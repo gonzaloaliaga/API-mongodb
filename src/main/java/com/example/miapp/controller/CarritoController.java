@@ -10,6 +10,9 @@ import com.example.miapp.model.Carrito;
 import com.example.miapp.model.CarritoItem;
 import com.example.miapp.repository.CarritoRepository;
 
+import org.springframework.hateoas.EntityModel;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
 @RestController
 @RequestMapping("/api/carrito")
 @CrossOrigin(
@@ -37,7 +40,7 @@ public class CarritoController {
 
     // Obtener carrito del usuario
     @GetMapping("/{usuarioId}")
-    public EntityModel<Carrito> getCarritoHateoas(@PathVariable String usuarioId) {
+    public EntityModel<Carrito> getCarrito(@PathVariable String usuarioId) {
         Carrito carrito = carritoRepository.findByUsuarioId(usuarioId)
                 .orElseGet(() -> carritoRepository.save(new Carrito(null, usuarioId, new ArrayList<>())));
         
@@ -74,18 +77,21 @@ public class CarritoController {
             @PathVariable String usuarioId,
             @PathVariable String productoId) {
 
-        Carrito carrito = getCarrito(usuarioId);
+        Carrito carrito = carritoRepository.findByUsuarioId(usuarioId)
+                .orElseGet(() -> carritoRepository.save(new Carrito(null, usuarioId, new ArrayList<>())));
+
         List<CarritoItem> items = carrito.getItems();
 
         items.removeIf(i -> {
             if (i.getProductoId().equals(productoId)) {
                 int nuevaCantidad = i.getCantidad() - 1;
+
                 if (nuevaCantidad > 0) {
                     i.setCantidad(nuevaCantidad);
-                    return false;
-                } else {
-                    return true;
+                    return false; // mantener item
                 }
+
+                return true; // eliminar item porque llega a 0
             }
             return false;
         });
