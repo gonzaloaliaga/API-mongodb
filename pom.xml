@@ -22,7 +22,7 @@
 	<url/>
 	<licenses>
 		<license/>
-	</licenses>
+	</licenses> 
 	<developers>
 		<developer/>
 	</developers>
@@ -36,54 +36,69 @@
 		<java.version>17</java.version>
 	</properties>
 	<dependencies>
+	
+		<!-- JPA para bases de datos relacionales (no aplica a MongoDB, pero por si acaso) -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
+
+		<!-- Starter para construir APIs REST (controladores, servidor embebido, JSON, etc.) -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+
+		<!-- Swagger/OpenAPI para documentación automática de la API -->
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 			<version>2.5.0</version> 
 		</dependency>
+
+		<!-- DevTools: recarga automática y utilidades para desarrollo -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<scope>runtime</scope>
 			<optional>true</optional>
 		</dependency>
+
+		<!-- Base de datos H2 en memoria (ideal para tests o debugging) -->
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+
+		<!-- Starter de testing para JUnit, MockMvc, AssertJ, etc. -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- HATEOAS: permite añadir enlaces RESTful a las respuestas de la API -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
+			<artifactId>spring-boot-starter-hateoas</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
-		</dependency>
+
+		<!-- Lombok: genera getters/setters/constructores en tiempo de compilación -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<version>1.18.32</version>
 			<scope>provided</scope>
 		</dependency>
+
+		<!-- MongoDB: repositorios y operaciones con documentos NoSQL -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-mongodb</artifactId>
 		</dependency>
+
+
 	</dependencies>
 
 	<build>
