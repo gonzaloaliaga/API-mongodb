@@ -2,10 +2,10 @@ package com.example.miapp.controller;
 
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import com.example.miapp.model.Producto;
 import com.example.miapp.repository.ProductoRepository;
-
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.CollectionModel;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
@@ -18,6 +18,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
         "https://mondongonzalo.up.railway.app"
     }
 )
+@Tag(name = "Productos", description = "Operaciones CRUD para el catalogo de ComiCommerce.")
 public class ProductoController {
 
     private final ProductoRepository productoRepository;
@@ -35,6 +36,7 @@ public class ProductoController {
     }
 
     // Obtener todos los productos
+    @Operation(summary = "Obtener Catalogo Completo", description = "Devuelve la lista completa de todos los productos disponibles en el catalogo.")
     @GetMapping
     public CollectionModel<EntityModel<Producto>> getAllProducts() {
         List<EntityModel<Producto>> products = productoRepository.findAll()
@@ -45,6 +47,7 @@ public class ProductoController {
     }
 
     // Obtener producto por ID
+    @Operation(summary = "Obtener Producto por ID", description = "Busca un producto específico usando su ID.")
     @GetMapping("/{id}")
     public EntityModel<Producto> getProductById(@PathVariable String id) {
         Producto product = productoRepository.findById(id)
@@ -54,6 +57,7 @@ public class ProductoController {
     }
 
     // Crear un nuevo producto
+    @Operation(summary = "Crear Producto", description = "Agrega un nuevo producto al catalogo.")
     @PostMapping
     public EntityModel<Producto> createProduct(@RequestBody Producto product) {
         Producto saved = productoRepository.save(product);
@@ -61,6 +65,7 @@ public class ProductoController {
     }
 
     // Actualizar producto existente
+    @Operation(summary = "Actualizar Producto", description = "Modifica todos los datos de un producto existente usando su ID.")
     @PutMapping("/{id}")
     public EntityModel<Producto> updateProduct(@PathVariable String id, @RequestBody Producto productDetails) {
         Producto product = productoRepository.findById(id)
@@ -78,6 +83,7 @@ public class ProductoController {
     }
 
     // Eliminar producto
+    @Operation(summary = "Eliminar Producto", description = "Elimina un producto del catalogo de forma permanente.")
     @DeleteMapping("/{id}")
     public void deleteProduct(@PathVariable String id) {
         productoRepository.deleteById(id);
