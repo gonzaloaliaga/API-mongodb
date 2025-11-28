@@ -90,6 +90,10 @@ public class UsuarioController {
     })
     @PostMapping
     public EntityModel<Usuario> createUser(@RequestBody Usuario usuario) {
+        
+        if (usuario.getRol() == null || usuario.getRol().isBlank()) {
+            usuario.setRol("cliente");
+        }
         Usuario saved = usuarioRepository.save(usuario);
         return toModel(saved);
     }

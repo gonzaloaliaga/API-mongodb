@@ -35,4 +35,7 @@ public class Usuario {
     @Schema(description = "Comuna de residencia del usuario.", example = "Providencia")
     private String comuna;
 
+    // Usado en proyecto Kotlin
+    private String rol = "cliente";
+
 }
