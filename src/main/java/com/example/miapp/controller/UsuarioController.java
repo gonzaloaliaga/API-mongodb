@@ -75,10 +75,10 @@ public class UsuarioController {
     @GetMapping("/login")
     public Usuario loginUser(
             @RequestParam String correo,
-            @RequestParam String password) {
+            @RequestParam String pass) {
 
         return usuarioRepository.findByCorreo(correo)
-                .filter(u -> u.getPass().equals(password))
+                .filter(u -> u.getPass().equals(pass))
                 .orElseThrow(() -> new RuntimeException("Credenciales inválidas"));
     }
 
