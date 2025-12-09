@@ -6,15 +6,15 @@ URL Swagger:
 https://mondongonzalo.up.railway.app/swagger-ui/index.html
 
 Esta API fue desplegada en Railway en la siguiente URL:
-mondongonzalo.up.railway.app
+https://mondongonzalo.up.railway.app
 
 Los endpoints son los siguientes:
 
 GET USUARIOS
-mondongonzalo.up.railway.app/api/users
+https://mondongonzalo.up.railway.app/api/users
 
 GET PRODUCTOS
-mondongonzalo.up.railway.app/products
+https://mondongonzalo.up.railway.app/products
 
 GET CARRITO DE UN USUARIO
-mondongonzalo.up.railway.app/carrito/{usuarioId}
+https://mondongonzalo.up.railway.app/carrito/{usuarioId}
