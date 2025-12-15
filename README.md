@@ -14,7 +14,7 @@ GET USUARIOS
 https://mondongonzalo.up.railway.app/api/users
 
 GET PRODUCTOS
-https://mondongonzalo.up.railway.app/products
+https://mondongonzalo.up.railway.app/api/products
 
 GET CARRITO DE UN USUARIO
-https://mondongonzalo.up.railway.app/carrito/{usuarioId}
+https://mondongonzalo.up.railway.app/carrito/{usuarioId} (Cambiar {usuarioId} por la ID, la web y app lo hacen por defecto)
