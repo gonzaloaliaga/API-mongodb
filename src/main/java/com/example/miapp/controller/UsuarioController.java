@@ -115,6 +115,7 @@ public class UsuarioController {
         if (userDetails.getTelefono() != null) usuario.setTelefono(userDetails.getTelefono());
         if (userDetails.getRegion() != null) usuario.setRegion(userDetails.getRegion());
         if (userDetails.getComuna() != null) usuario.setComuna(userDetails.getComuna());
+        if (userDetails.getRol() != null) usuario.setRol(userDetails.getRol());
 
         usuarioRepository.save(usuario);
 
