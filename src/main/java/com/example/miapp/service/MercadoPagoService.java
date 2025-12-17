@@ -10,8 +10,12 @@ import com.example.miapp.model.Orden;
 import com.example.miapp.repository.OrdenRepository;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.*;
+import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 import java.math.BigDecimal;
+import java.net.http.HttpHeaders;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,7 +52,7 @@ public class MercadoPagoService {
             Producto producto = productoRepository.findById(item.getProductoId())
                     .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 
-            double precio = Double.parseDouble(producto.getPrecio());
+            double precio = producto.getPrecio();
             total += precio * item.getCantidad();
 
             itemsMp.add(Map.of(
