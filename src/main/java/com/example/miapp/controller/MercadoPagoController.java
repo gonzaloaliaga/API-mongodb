@@ -11,7 +11,12 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/mercadopago")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(
+    origins = {
+        "https://comicommerce.vercel.app",
+        "https://mondongonzalo.up.railway.app"
+    }
+)
 public class MercadoPagoController {
 
     @Autowired
