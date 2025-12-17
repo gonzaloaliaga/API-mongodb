@@ -45,9 +45,9 @@
 
 		<dependency>
 			<groupId>com.mercadopago</groupId>
-			<artifactId>sdk-java</artifactId>
-			<version>2.9.0</version>
-    	</dependency>
+			<artifactId>sdk</artifactId>
+			<version>2.1.14</version>
+		</dependency>
 
 		<!-- Starter para construir APIs REST (controladores, servidor embebido, JSON, etc.) -->
 		<dependency>
