@@ -46,7 +46,7 @@
 		<dependency>
 			<groupId>com.mercadopago</groupId>
 			<artifactId>sdk</artifactId>
-			<version>2.1.14</version>
+			<version>1.9.0</version>
 		</dependency>
 
 		<!-- Starter para construir APIs REST (controladores, servidor embebido, JSON, etc.) -->
@@ -115,5 +115,11 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>production</id>
+		</profile>
+	</profiles>
 
 </project>
