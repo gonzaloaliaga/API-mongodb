@@ -14,7 +14,8 @@ import java.util.Map;
 @CrossOrigin(
     origins = {
         "https://comicommerce.vercel.app",
-        "https://mondongonzalo.up.railway.app"
+        "https://mondongonzalo.up.railway.app",
+        "https://sandbox.mercadopago.cl"
     }
 )
 public class MercadoPagoController {
